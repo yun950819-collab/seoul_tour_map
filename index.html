@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Seoul Tour Information POS & Booklet</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- html2pdf.js 라이브러리 추가 (하이퍼링크 클릭 보존 전용) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
   <style>
     :root {
-      /* Bright & Modern Light Theme Variables */
       --bg: #f8fafc;
       --card-bg: #ffffff;
       --card-border: #e2e8f0;
@@ -89,7 +90,7 @@
       box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
     }
 
-    /* PDF / Print Button */
+    /* PDF Button */
     .btn-pdf {
       background: #059669;
       color: white;
@@ -171,7 +172,7 @@
       width: 220px;
     }
 
-    /* POS Grid View for Courses */
+    /* POS Grid View */
     .pos-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -187,11 +188,6 @@
       flex-direction: column;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
       transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .pos-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-      border-color: #cbd5e1;
     }
 
     .pos-card-img {
@@ -277,9 +273,7 @@
       transition: background 0.2s;
       text-align: center;
     }
-    .pos-link-btn:hover { background: #1d4ed8; }
 
-    /* Single Group Container Card Styling (For Restaurant & Tour) */
     .group-card-container {
       grid-column: 1 / -1;
       background: var(--card-bg);
@@ -358,103 +352,41 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      transition: background 0.2s;
+      cursor: pointer;
+      border: none;
     }
-    .sub-action-btn:hover { background: #047857; }
-    .sub-action-btn.tour-btn {
-      background: #0284c7;
-    }
-    .sub-action-btn.tour-btn:hover { background: #0369a1; }
 
-    /* Map Box (Tour View) */
     .map-card {
       background: var(--card-bg);
       border-radius: 16px;
       padding: 12px;
       border: 1px solid var(--card-border);
       box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+      grid-column: 1 / -1;
     }
-    #map { height: 280px; width: 100%; border-radius: 12px; }
+    #map { height: 320px; width: 100%; border-radius: 12px; z-index: 1; }
 
     .hidden { display: none !important; }
-
-    /* 🖨️ PRINT & PDF PAMPHLET (BOOKLET) STYLING */
-    @media print {
-      body {
-        background: #ffffff !important;
-        color: #000000 !important;
-        padding: 0 !important;
-      }
-      .pos-header, .filter-bar-container, .map-card, .pos-link-btn, .sub-action-btn {
-        display: none !important;
-      }
-      .container {
-        max-width: 100% !important;
-        gap: 12px !important;
-      }
-      .header-banner {
-        background: #4f46e5 !important;
-        color: white !important;
-        padding: 16px !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-      .pos-grid {
-        display: grid !important;
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 12px !important;
-      }
-      .pos-card, .group-card-container {
-        border: 1px solid #cbd5e1 !important;
-        box-shadow: none !important;
-        break-inside: avoid;
-        page-break-inside: avoid;
-      }
-      .pos-card-img, .sub-card-img {
-        height: 100px !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-      .pos-card-body, .sub-item-card-body {
-        padding: 10px !important;
-        gap: 8px !important;
-      }
-      .pos-items-list, .sub-item-card {
-        background: #f8fafc !important;
-        border: 1px solid #e2e8f0 !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-    }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <!-- POS Top Navigation -->
     <div class="pos-header">
       <div class="pos-title">🖥️ SEOUL TOUR POS</div>
       <div class="nav-tabs">
-        <button class="nav-tab active-spot" id="btn-spot" onclick="switchOption('spot')">
-          📖 Spot Details & Courses
-        </button>
-        <button class="nav-tab" id="btn-opt2" onclick="switchOption('opt2')">
-          🚌 Tour Packages
-        </button>
-        <button class="btn-pdf" onclick="exportBookletPDF()">
-          📄 Export PDF / Booklet
-        </button>
+        <button class="nav-tab active-spot" id="btn-spot" onclick="switchOption('spot')">📖 Spot Details & Courses</button>
+        <button class="nav-tab" id="btn-opt2" onclick="switchOption('opt2')">🚌 Tour Packages</button>
+        <button class="btn-pdf" id="pdfBtn" onclick="exportBookletPDF()">📄 Download PDF (Clickable Links)</button>
       </div>
     </div>
 
-    <!-- Header Banner -->
     <div class="header-banner" id="headerBanner">
       <div class="header-tag" id="optTag">SPOT DETAILS & COURSE BUNDLES</div>
       <div class="header-title" id="optTitle">Grouped Courses & Spot Details</div>
       <div class="header-desc" id="optDesc">All locations grouped by shared course links, categorized for interactive POS selection.</div>
     </div>
 
-    <!-- SPOT DETAILS VIEW (Default First Tab) -->
     <div id="spotView">
       <div class="filter-bar-container">
         <div class="filter-group">
@@ -467,40 +399,34 @@
       </div>
 
       <div class="pos-grid" id="courseContainer" style="margin-top: 16px;"></div>
-    </div>
 
-    <!-- TOUR PACKAGES VIEW (Option 2 Tab) -->
-    <div id="tourView" class="hidden">
-      <div class="map-card">
+      <div class="map-card" id="mapSection" style="margin-top: 16px;">
         <div id="map"></div>
       </div>
-      <div class="pos-grid" id="tourGroupContainer" style="margin-top: 16px;"></div>
+
+      <div class="pos-grid" id="restaurantContainer" style="margin-top: 16px;"></div>
+    </div>
+
+    <div id="tourView" class="hidden">
+      <div class="map-card" id="tourMapSection" style="margin-bottom: 16px;">
+        <div id="tourMap" style="height: 320px; width: 100%; border-radius: 12px; z-index: 1;"></div>
+      </div>
+      <div class="pos-grid" id="tourGroupContainer"></div>
     </div>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    // 검증된 고화질 Unsplash CDN 이미지 매핑
     const imageMap = {
-      // 북촌 한옥마을 코스
       "Bukchon & Samcheong-dong Course": "https://images.unsplash.com/photo-1548115184-bc6544d06a58?auto=format&fit=crop&w=800&q=80",
-      // 광화문 & 경복궁 코스
       "Gwanghwamun & Gyeongbokgung Course": "https://images.unsplash.com/photo-1722074764794-3bd97ff3047c?auto=format&fit=crop&w=800&q=80",
-      // 청계천
       "Cheonggyecheon Stream & Deoksugung Course": "https://images.unsplash.com/photo-1687779176476-55920ac3f400?auto=format&fit=crop&w=800&q=80",
-      // 전통시장
       "Tongin Market Traditional Course": "https://images.unsplash.com/photo-1766662538481-2f0de36fc4af?auto=format&fit=crop&w=800&q=80",
-      // 인사동 & 쌈짓길
       "Insa-dong Culture & Ssamzigil Course": "https://images.unsplash.com/photo-1709983075478-4ec7b791329a?auto=format&fit=crop&w=800&q=80",
-      // 성수동 감성 카페
       "Seongsu Lifestyle & Cafe Street Course": "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80",
-      // 남산 서울타워 야경
       "Namsan & Myeong-dong Downtown Course": "https://images.unsplash.com/photo-1576826176379-d3c1b5984a1a?auto=format&fit=crop&w=800&q=80",
-      // 국립중앙박물관
       "National Museum of Korea Course": "https://images.unsplash.com/photo-1662808655579-465374fbb5fe?auto=format&fit=crop&w=800&q=80",
-      // 잠실 롯데타워
       "Jamsil Lotte World Course": "https://images.unsplash.com/photo-1672980487117-f719398fb8d4?auto=format&fit=crop&w=800&q=80",
-      // 동대문 / 성곽
       "Dongdaemun & Historic Prison Course": "https://images.unsplash.com/photo-1779280138636-7c94d1c0bac1?auto=format&fit=crop&w=800&q=80"
     };
 
@@ -583,51 +509,73 @@
         subCategory: "Historical & Security",
         desc: "A powerful geopolitical tour visiting the Korean Demilitarized Zone, Third Tunnel, and Dora Observatory.",
         image: "https://images.unsplash.com/photo-1710006881997-7c2ce34d68a8?auto=format&fit=crop&w=800&q=80",
-        url: "https://english.visitkorea.or.kr/svc/thingsToDo/subDmzTours.do?menuSn=234"
+        url: "https://english.visitkorea.or.kr/svc/thingsToDo/subDmzTours.do?menuSn=234",
+        lat: 37.8888, lng: 126.7153
       },
       {
         name: "Seoul City Tour Bus",
         subCategory: "City Sightseeing",
         desc: "Hop-on & hop-off sightseeing bus covering major iconic landmarks across downtown Seoul comfortably.",
         image: "https://images.unsplash.com/photo-1517154421773-0529f29ea451?auto=format&fit=crop&w=800&q=80",
-        url: "https://www.seoulcitybus.com/en/tours"
+        url: "https://www.seoulcitybus.com/en/tours",
+        lat: 37.5670, lng: 126.9772
       },
       {
         name: "K-Beauty & K-Medi Wellness Tour",
         subCategory: "Wellness & Healing",
         desc: "A restorative day-trip featuring Korean traditional tea therapy, herbal spa, and K-beauty wellness treatments.",
         image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80",
-        url: "https://english.visitkorea.or.kr/svc/contents/contentsView.do?menuSn=923&dataSetId=115&vcontsId=219764"
+        url: "https://english.visitkorea.or.kr/svc/contents/contentsView.do?menuSn=923&dataSetId=115&vcontsId=219764",
+        lat: 37.5788, lng: 126.9850
       }
     ];
 
     const restaurantList = [
-      { name: "Hwangsaungm Kongguksu", location: "📍 Euljiro / City Hall", query: "황생가콩국수" },
-      { name: "Gosari express", location: "📍 Jongno / Insa-dong", query: "고사리익스프레스" },
-      { name: "Flower / Vegan", location: "📍 Insa-dong", query: "꽃밥에피다" },
-      { name: "Course / Vegan", location: "📍 Insa-dong", query: "인사동 비건 코스 요리" },
-      { name: "Osegye Hyang", location: "📍 Insa-dong", query: "오세계향" },
-      { name: "Wooyougang", location: "📍 Jongno / Seochon", query: "우유강" },
-      { name: "Temple cuisine (Sanchon / Balwoo)", location: "📍 Insa-dong", query: "산촌 사찰음식" },
-      { name: "Hamyeong-il", location: "📍 Insa-dong", query: "하명일" },
-      { name: "Solsot Gwanghwamun", location: "📍 Gwanghwamun", query: "솔솥 광화문점" },
-      { name: "Joseon Bossam (City Hall Station)", location: "📍 City Hall Station", query: "조선보쌈 시청역점" },
-      { name: "Solsot", location: "📍 City Hall / Seochon", query: "솔솥" },
-      { name: "PLANT", location: "📍 Itaewon", query: "플랜트 이태원" },
-      { name: "Plantude", location: "📍 COEX / Yongsan", query: "플랜티드 코엑스" },
-      { name: "Monk's Butcher", location: "📍 Hannam-dong", query: "몽크스부처" },
-      { name: "Eojjeoda Nongbu", location: "📍 Hoehyeon / Namdaemun", query: "어쩌다농부" }
+      { name: "Hwangsaungm Kongguksu (황생가 콩국수)", location: "📍 Euljiro / City Hall", query: "황생가콩국수", lat: 37.5815, lng: 126.9818 },
+      { name: "Gosari express (고사리 익스프레스)", location: "📍 Jongno / Insa-dong", query: "고사리익스프레스", lat: 37.5710, lng: 127.0210 },
+      { name: "Flower, Blossom on the Rice (꽃,밥에피다)", location: "📍 Insa-dong", query: "꽃밥에피다", lat: 37.5746, lng: 126.9856 },
+      { name: "Insa-dong Vegan Course (인사동 비건 코스)", location: "📍 Insa-dong", query: "인사동 비건 코스 요리", lat: 37.5740, lng: 126.9850 },
+      { name: "Osegye Hyang (오세계향)", location: "📍 Insa-dong", query: "오세계향", lat: 37.5742, lng: 126.9845 },
+      { name: "Wooyougang (우유강)", location: "📍 Jongno / Seochon", query: "우유강", lat: 37.5780, lng: 126.9720 },
+      { name: "Sanchon / Temple cuisine (산촌 사찰음식)", location: "📍 Insa-dong", query: "산촌 사찰음식", lat: 37.5738, lng: 126.9848 },
+      { name: "Hamyeong-il (하명일)", location: "📍 Insa-dong", query: "하명일", lat: 37.5732, lng: 126.9852 },
+      { name: "Solsot Gwanghwamun (솔솥 광화문점)", location: "📍 Gwanghwamun", query: "솔솥 광화문점", lat: 37.5702, lng: 126.9768 },
+      { name: "Joseon Bossam (조선보쌈 시청역점)", location: "📍 City Hall Station", query: "조선보쌈 시청역점", lat: 37.5620, lng: 126.9760 },
+      { name: "Solsot Seochon (솔솥 서촌점)", location: "📍 City Hall / Seochon", query: "솔솥 서촌점", lat: 37.5785, lng: 126.9705 },
+      { name: "PLANT (플랜트 이태원)", location: "📍 Itaewon", query: "플랜트 이태원", lat: 37.5342, lng: 126.9935 },
+      { name: "Plantude (플랜티드 코엑스)", location: "📍 COEX / Yongsan", query: "플랜티드 코엑스", lat: 37.5118, lng: 127.0592 },
+      { name: "Monk's Butcher (몽크스부처)", location: "📍 Hannam-dong", query: "몽크스부처", lat: 37.5365, lng: 127.0012 },
+      { name: "Eojjeoda Nongbu (어쩌다농부)", location: "📍 Hoehyeon / Namdaemun", query: "어쩌다농부", lat: 37.5585, lng: 126.9775 }
     ];
 
     const fallbackImage = "https://images.unsplash.com/photo-1517154421773-0529f29ea451?auto=format&fit=crop&w=800&q=80";
 
-    let map, currentCategory = 'ALL';
+    let map, tourMap, currentMarker = null, tourMarker = null, currentCategory = 'ALL';
 
     function initMap() {
-      map = L.map('map', { zoomControl: true }).setView([37.5665, 126.9780], 12);
+      map = L.map('map', { zoomControl: true }).setView([37.5665, 126.9780], 13);
       L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map);
+
+      tourMap = L.map('tourMap', { zoomControl: true }).setView([37.5665, 126.9780], 11);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(tourMap);
       
       switchOption('spot');
+    }
+
+    function focusOnMap(lat, lng, title, isTour = false) {
+      const activeMap = isTour ? tourMap : map;
+      const mapElemId = isTour ? 'tourMapSection' : 'mapSection';
+
+      document.getElementById(mapElemId).scrollIntoView({ behavior: 'smooth', block: 'center' });
+      activeMap.setView([lat, lng], 16, { animate: true });
+
+      if (isTour) {
+        if (tourMarker) tourMap.removeLayer(tourMarker);
+        tourMarker = L.marker([lat, lng]).addTo(tourMap).bindPopup(`<b>${title}</b>`).openPopup();
+      } else {
+        if (currentMarker) map.removeLayer(currentMarker);
+        currentMarker = L.marker([lat, lng]).addTo(map).bindPopup(`<b>${title}</b>`).openPopup();
+      }
     }
 
     function switchOption(key) {
@@ -650,6 +598,7 @@
         headerDesc.innerText = "All locations grouped by shared course links, categorized for interactive POS selection.";
 
         renderGroupedSpots();
+        setTimeout(() => map.invalidateSize(), 150);
       } else {
         tourBtn.className = 'nav-tab active-tour';
         spotBtn.className = 'nav-tab';
@@ -660,8 +609,8 @@
         headerTitle.innerText = "Seoul Special Tour Packages";
         headerDesc.innerText = "Curated Tour Experiences — City Tour Bus, DMZ Security Tour, and K-Beauty & Wellness Experiences.";
 
-        setTimeout(() => map.invalidateSize(), 100);
         renderTourPackages();
+        setTimeout(() => tourMap.invalidateSize(), 150);
       }
     }
 
@@ -673,11 +622,13 @@
     }
 
     function renderGroupedSpots() {
-      const container = document.getElementById('courseContainer');
+      const courseContainer = document.getElementById('courseContainer');
+      const restaurantContainer = document.getElementById('restaurantContainer');
       const search = document.getElementById('spotSearch').value.toLowerCase();
-      container.innerHTML = '';
+      
+      courseContainer.innerHTML = '';
+      restaurantContainer.innerHTML = '';
 
-      // 1. 코스 카드
       if (currentCategory === 'ALL' || currentCategory === 'In Seoul') {
         courseGroups.forEach(group => {
           const groupMatches = group.groupName.toLowerCase().includes(search);
@@ -687,7 +638,6 @@
           if (!groupMatches && !descMatches && matchingItems.length === 0) return;
 
           const imgSrc = imageMap[group.groupName] || fallbackImage;
-
           const card = document.createElement('div');
           card.className = 'pos-card';
 
@@ -706,14 +656,15 @@
                 <div class="pos-card-desc">${group.desc}</div>
               </div>
               <div class="pos-items-list">${itemsHtml}</div>
-              ${group.sharedUrl ? `<a href="${group.sharedUrl}" target="_blank" rel="noreferrer" class="pos-link-btn">🔗 Open Details</a>` : ''}
+              ${group.sharedUrl ? `
+                <a href="${group.sharedUrl}" target="_blank" rel="noreferrer" class="pos-link-btn">🔗 Open Details Link</a>
+              ` : ''}
             </div>
           `;
-          container.appendChild(card);
+          courseContainer.appendChild(card);
         });
       }
 
-      // 2. 투어 패키지 카드
       if (currentCategory === 'ALL' || currentCategory === 'Tour') {
         const filteredTours = tourPackageList.filter(t => 
           t.name.toLowerCase().includes(search) || t.subCategory.toLowerCase().includes(search) || t.desc.toLowerCase().includes(search)
@@ -732,9 +683,14 @@
                   <div class="sub-card-title" style="margin-top: 6px;">${t.name}</div>
                   <div class="sub-card-desc" style="margin-top: 4px;">${t.desc}</div>
                 </div>
-                <a href="${t.url}" target="_blank" rel="noreferrer" class="sub-action-btn tour-btn">
-                  🔗 Tour Details
-                </a>
+                <div style="display: flex; gap: 6px; align-items: center; margin-top: 8px;">
+                  <button class="sub-action-btn tour-btn" onclick="focusOnMap(${t.lat}, ${t.lng}, '${t.name.replace(/'/g, "\\'")}')">
+                    📍 Spot
+                  </button>
+                  <a href="${t.url}" target="_blank" rel="noreferrer" class="sub-action-btn tour-btn">
+                    🔗 Details Link
+                  </a>
+                </div>
               </div>
             </div>
           `).join('');
@@ -748,11 +704,10 @@
               ${tourCardsHtml}
             </div>
           `;
-          container.appendChild(tourGroupCard);
+          courseContainer.appendChild(tourGroupCard);
         }
       }
 
-      // 3. 레스토랑 카드
       if (currentCategory === 'ALL' || currentCategory === 'Restaurant') {
         const filteredRestaurants = restaurantList.filter(r => 
           r.name.toLowerCase().includes(search) || r.location.toLowerCase().includes(search)
@@ -762,19 +717,27 @@
           const restaurantGroupCard = document.createElement('div');
           restaurantGroupCard.className = 'group-card-container';
 
-          let restCardsHtml = filteredRestaurants.map(r => `
-            <div class="sub-item-card">
-              <div class="sub-item-card-body">
-                <div>
-                  <div class="sub-card-title">${r.name}</div>
-                  <span class="sub-location-tag" style="margin-top: 6px;">${r.location}</span>
+          let restCardsHtml = filteredRestaurants.map(r => {
+            const naverMapUrl = `https://map.naver.com/v5/search/${encodeURIComponent(r.query)}`;
+            return `
+              <div class="sub-item-card">
+                <div class="sub-item-card-body">
+                  <div>
+                    <div class="sub-card-title">${r.name}</div>
+                    <span class="sub-location-tag" style="margin-top: 6px;">${r.location}</span>
+                  </div>
+                  <div style="display: flex; gap: 6px; align-items: center; margin-top: 8px;">
+                    <button class="sub-action-btn" onclick="focusOnMap(${r.lat}, ${r.lng}, '${r.name.replace(/'/g, "\\'")}')">
+                      📍 Map Spot
+                    </button>
+                    <a href="${naverMapUrl}" target="_blank" rel="noreferrer" class="sub-action-btn" style="background: #0284c7;">
+                      🗺️ Naver Map Link
+                    </a>
+                  </div>
                 </div>
-                <a href="https://map.naver.com/v5/search/${encodeURIComponent(r.query)}" target="_blank" rel="noreferrer" class="sub-action-btn">
-                  🗺️ Map
-                </a>
               </div>
-            </div>
-          `).join('');
+            `;
+          }).join('');
 
           restaurantGroupCard.innerHTML = `
             <div class="group-card-header">
@@ -785,9 +748,11 @@
               ${restCardsHtml}
             </div>
           `;
-          container.appendChild(restaurantGroupCard);
+          restaurantContainer.appendChild(restaurantGroupCard);
         }
       }
+
+      if (map) setTimeout(() => map.invalidateSize(), 100);
     }
 
     function renderTourPackages() {
@@ -806,9 +771,14 @@
               <div class="sub-card-title" style="margin-top: 6px;">${t.name}</div>
               <div class="sub-card-desc" style="margin-top: 4px;">${t.desc}</div>
             </div>
-            <a href="${t.url}" target="_blank" rel="noreferrer" class="sub-action-btn tour-btn">
-              🔗 Tour Details
-            </a>
+            <div style="display: flex; gap: 6px; align-items: center; margin-top: 8px;">
+              <button class="sub-action-btn tour-btn" onclick="focusOnMap(${t.lat}, ${t.lng}, '${t.name.replace(/'/g, "\\'")}', true)">
+                📍 Map Spot
+              </button>
+              <a href="${t.url}" target="_blank" rel="noreferrer" class="sub-action-btn tour-btn">
+                🔗 Tour Details Link
+              </a>
+            </div>
           </div>
         </div>
       `).join('');
@@ -825,8 +795,35 @@
       container.appendChild(tourGroupCard);
     }
 
+    // 📄 html2pdf.js 기반 하이퍼링크 보존 PDF 생성 함수
     function exportBookletPDF() {
-      window.print();
+      const header = document.querySelector('.pos-header');
+      const filter = document.querySelector('.filter-bar-container');
+      const maps = document.querySelectorAll('.map-card');
+      const pdfBtn = document.getElementById('pdfBtn');
+
+      // PDF 렌더링 시 제외할 화면 영역 레이아웃 숨기기
+      header.style.display = 'none';
+      if (filter) filter.style.display = 'none';
+      maps.forEach(m => m.style.display = 'none');
+
+      const element = document.querySelector('.container');
+
+      const opt = {
+        margin:       8,
+        filename:     'Seoul_Tour_Booklet.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true, logging: false },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      // PDF 생성 및 저장
+      html2pdf().set(opt).from(element).save().then(() => {
+        // PDF 생성 완료 후 다시 화면 복구
+        header.style.display = 'flex';
+        if (filter) filter.style.display = 'flex';
+        maps.forEach(m => m.style.display = 'block');
+      });
     }
 
     window.onload = initMap;
