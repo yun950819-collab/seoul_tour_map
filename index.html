@@ -187,17 +187,6 @@
       font-weight: 600;
     }
 
-    .single-link {
-      font-size: 11px;
-      color: #2563eb;
-      text-decoration: none;
-      margin-top: 6px;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-    }
-
     .hidden { display: none !important; }
   </style>
 </head>
@@ -266,67 +255,68 @@
   <script>
     const courseGroups = [
       {
-        groupName: "Bukchon & Samcheong-dong Hanok Course",
+        groupName: "Bukchon & Samcheong-dong Course",
         category: "In Seoul",
-        sharedUrl: "https://english.visitkorea.or.kr/ek/enu/WhereToGo/sub/subMainView.do?vsn=285553",
+        sharedUrl: "https://english.visitkorea.or.kr/svc/whereToGo/hdrdslt/hdrdsltView.do?crsSn=285553",
         items: [
           { eng: "Bukchon Hanok Village" },
           { eng: "Samcheong-dong Street" }
         ]
       },
       {
-        groupName: "Gwanghwamun & Gyeongbokgung History & Culture Course",
+        groupName: "Gwanghwamun & Gyeongbokgung Course",
         category: "In Seoul",
-        sharedUrl: "https://english.visitkorea.or.kr/ek/enu/WhereToGo/sub/subMainView.do?vsn=252",
+        sharedUrl: "https://english.visitkorea.or.kr/svc/whereToGo/hdrdslt/hdrdsltView.do?crsSn=252",
         items: [
-          { eng: "Gwanghwamun Square" },
+          { eng: "Gwanghwamun Gate" },
           { eng: "Gyeongbokgung Palace" },
           { eng: "National Museum of Modern and Contemporary Art" },
           { eng: "National Museum of Korean Contemporary History" }
         ]
       },
       {
-        groupName: "Cheonggyecheon Stream & Deoksugung Jeongdong-gil Course",
+        groupName: "Cheonggyecheon Stream & Deoksugung Course",
         category: "In Seoul",
-        sharedUrl: "https://english.visitkorea.or.kr/ek/enu/WhereToGo/sub/subMainView.do?vsn=250",
+        sharedUrl: "https://english.visitkorea.or.kr/svc/whereToGo/hdrdslt/hdrdsltView.do?crsSn=250",
         items: [
           { eng: "Cheonggyecheon Stream" },
           { eng: "Deoksugung Palace" },
           { eng: "Seoul Museum of Art" },
-          { eng: "Seokjojeon Hall" }
+          { eng: "Sangchonjae House" }
         ]
       },
       {
-        groupName: "Cheongwadae & Cheongun Literature Tour",
+        groupName: "Cheongwadae & Cheongun Literature Course",
         category: "In Seoul",
-        sharedUrl: "https://english.visitkorea.or.kr/ek/enu/WhereToGo/sub/subMainView.do?vsn=250299",
+        sharedUrl: "https://english.visitkorea.or.kr/svc/whereToGo/hdrdslt/hdrdsltView.do?crsSn=250399",
         items: [
           { eng: "Cheongun Literature Library" },
           { eng: "Cheongwadae Sarangchae" }
         ]
       },
       {
-        groupName: "Seochon & Tongin Market Traditional Experience",
+        groupName: "Tongin Market Traditional Course",
         category: "In Seoul",
-        sharedUrl: "https://english.visitkorea.or.kr/ek/enu/WhereToGo/sub/subMainView.do?vsn=551510",
+        sharedUrl: "https://english.visitkorea.or.kr/svc/whereToGo/hdrdslt/hdrdsltView.do?crsSn=551510",
         items: [
           { eng: "Tongin Market" }
         ]
       },
       {
-        groupName: "Insa-dong Traditional Culture & Ssamzigil Course",
+        groupName: "Insa-dong Culture & Ssamzigil Course",
         category: "In Seoul",
-        sharedUrl: "https://english.visitkorea.or.kr/ek/enu/WhereToGo/sub/subMainView.do?vsn=555467",
+        sharedUrl: "https://english.visitkorea.or.kr/svc/whereToGo/hdrdslt/hdrdsltView.do?crsSn=565467",
         items: [
           { eng: "Ssamzigil" },
-          { eng: "Insa-dong Hanok Street" },
+          { eng: "Insa-dong" },
+          { eng: "Ikseon-dong Hanok Street" },
           { eng: "Jogyesa Temple" }
         ]
       },
       {
-        groupName: "Seongsu Trendy Lifestyle Course",
+        groupName: "Seongsu Lifestyle & Cafe Street Course",
         category: "In Seoul",
-        sharedUrl: "https://english.visitkorea.or.kr/ek/enu/WhereToGo/sub/subMainView.do?vsn=300723",
+        sharedUrl: "https://english.visitkorea.or.kr/svc/whereToGo/hdrdslt/hdrdsltView.do?crsSn=300723",
         items: [
           { eng: "Seongsu-dong Cafe Street" },
           { eng: "Amore Seongsu" }
@@ -335,7 +325,7 @@
       {
         groupName: "Namsan & Myeong-dong Downtown Course",
         category: "In Seoul",
-        sharedUrl: "https://english.visitkorea.or.kr/ek/enu/WhereToGo/sub/subMainView.do?vsn=251",
+        sharedUrl: "https://english.visitkorea.or.kr/svc/whereToGo/hdrdslt/hdrdsltView.do?crsSn=251",
         items: [
           { eng: "N Seoul Tower" },
           { eng: "Myeong-dong" },
@@ -343,88 +333,81 @@
         ]
       },
       {
-        groupName: "National Museum of Korea Culture Course",
+        groupName: "National Museum of Korea Course",
         category: "In Seoul",
-        sharedUrl: "",
+        sharedUrl: "https://english.visitkorea.or.kr/svc/whereToGo/hdrdslt/hdrdsltView.do?crsSn=379798",
         items: [
-          { eng: "National Museum of Korea" }
-        ]
-      },
-      {
-        groupName: "Yeouido Hangang Park Relaxation & Cruise Course",
-        category: "In Seoul",
-        sharedUrl: "https://english.visitkorea.or.kr/ek/enu/WhereToGo/sub/subMainView.do?vsn=379786",
-        items: [
+          { eng: "National Museum of Korea" },
           { eng: "Yeouido Hangang Park" },
           { eng: "E-Land Cruise (Hangang River Ferry Cruise)" },
           { eng: "The Hyundai Seoul" }
         ]
       },
       {
-        groupName: "Jamsil Lotte World & Seokchon Lake Course",
+        groupName: "Jamsil Lotte World Course",
         category: "In Seoul",
-        sharedUrl: "https://english.visitkorea.or.kr/ek/enu/WhereToGo/sub/subMainView.do?vsn=259",
+        sharedUrl: "https://english.visitkorea.or.kr/svc/whereToGo/hdrdslt/hdrdsltView.do?crsSn=259",
         items: [
           { eng: "Lotte World Tower & Mall" },
-          { eng: "Lotte World", url: "https://english.visitkorea.or.kr/ek/enu/WhereToGo/sub/subMainView.do?vsn=208" },
+          { eng: "Lotte World" },
           { eng: "Songpa Naru Park (Seokchonhosu Lake)" }
         ]
       },
       {
-        groupName: "Dongdaemun & Historic Area Course",
+        groupName: "Dongdaemun & Historic Prison Course",
         category: "In Seoul",
-        sharedUrl: "https://english.visitkorea.or.kr/ek/enu/WhereToGo/sub/subMainView.do?vsn=250399",
+        sharedUrl: "https://english.visitkorea.or.kr/svc/whereToGo/hdrdslt/hdrdsltView.do?crsSn=250299",
         items: [
           { eng: "Seodaemun Prison History Museum" },
           { eng: "Dongdaemun Gate" },
-          { eng: "Yeongcheon Market" }
+          { eng: "Dongdaemun Yeongcheon Market" }
         ]
       },
       {
         groupName: "DMZ Security Tour",
         category: "Tour",
-        sharedUrl: "https://english.visitkorea.or.kr/ek/enu/ThingToDo/Tours/doTours.do?menuSn=234",
+        sharedUrl: "https://english.visitkorea.or.kr/svc/thingsToDo/subDmzTours.do?menuSn=234",
         items: [
-          { eng: "DMZ Tour", note: "Paju / Demilitarized Zone" }
+          { eng: "DMZ Tour" }
         ]
       },
       {
         groupName: "Seoul City Tour Bus",
         category: "Tour",
-        sharedUrl: "https://www.seoulcitybus.com/en/",
+        sharedUrl: "https://www.seoulcitybus.com/en/tours",
         items: [
-          { eng: "Seoul City Tour Bus", note: "Hop-on Hop-off Tour" }
+          { eng: "Seoul City Tour" }
         ]
       },
       {
-        groupName: "Seoul Wellness & Healing Tour Group",
+        groupName: "Wellness & Royal Palace Experience Tour",
         category: "Tour",
-        sharedUrl: "",
+        sharedUrl: "https://english.visitkorea.or.kr/svc/contents/contentsView.do?menuSn=2196&cotnId=a8a4881f-f0da-4aee-be34-d4ccd0a3c220",
         items: [
-          { eng: "Healthy Eats and OLIVE YOUNG", note: "Wellness & Shopping" },
-          { eng: "Footbath & Royal Palace Experience", note: "Traditional Healing" }
+          { eng: "A Wellness Day Trip in Seoul: Healthy Eats and OLIVE BETTER" },
+          { eng: "Experience Royal Palace Life" }
         ]
       },
       {
         groupName: "Recommended Dining & Restaurants",
         category: "Restaurant",
-        sharedUrl: "",
+        sharedUrl: "https://english.visitkorea.or.kr/svc/contents/contentsView.do?vcomTsn=1243233&menuSn=365",
         items: [
-          { eng: "Hwangsaengga Kalguksu", note: "Samcheong-dong" },
-          { eng: "Goryeo Samgyetang", note: "City Hall" },
-          { eng: "Course Express", note: "Mapo" },
-          { eng: "A flower blossom on the rice", note: "Insa-dong (Reservation Recommended)" },
-          { eng: "Osegye Hyang", note: "Insa-dong" },
-          { eng: "Sanchon", note: "Insa-dong" },
-          { eng: "Balwoo Gongyang (Temple Cuisine)", note: "Insa-dong (Reservation Recommended)" },
-          { eng: "Hamhunggombonaengmyeon", note: "Jongno" },
-          { eng: "Sushiman", note: "City Hall" },
-          { eng: "Solsot Gwanghwamun", note: "Gwanghwamun" },
-          { eng: "Joseonok (City Hall Branch)", note: "City Hall" },
+          { eng: "Hwangsaungm Kongguksu" },
+          { eng: "Gosari express" },
+          { eng: "Flower / Vegan" },
+          { eng: "Course / Vegan" },
+          { eng: "Osegye Hyang", note: "Insa-dong - Reservation available" },
+          { eng: "Wooyougang" },
+          { eng: "Temple cuisine", note: "Insa-dong - Reservation available" },
+          { eng: "Hamyeong-il", note: "Insa-dong" },
+          { eng: "Solsot Gwanghwamun", note: "City-Hall" },
+          { eng: "Joseon Bossam (City Hall Station Branch)", note: "City-Hall" },
+          { eng: "Solsot", note: "City-Hall" },
           { eng: "PLANT", note: "Itaewon" },
-          { eng: "Planted", note: "Itaewon" },
-          { eng: "Monk's Butcher", note: "COEX / Yongsan" },
-          { eng: "Eojjeoda Nongbu", note: "Hapjeong / Namdaemun" }
+          { eng: "Plantude", note: "COEX, Yongsan" },
+          { eng: "Monk's Butcher", note: "Hannam-dong" },
+          { eng: "Eojjeoda Nongbu", note: "Hoehyeon, Namdaemun" }
         ]
       }
     ];
@@ -460,7 +443,7 @@
         tag: "SPOT DETAILS & COURSE BUNDLES",
         title: "Grouped Courses & Spot Details",
         desc: "All locations grouped by shared course links and Excel bounding boxes.",
-        badges: [`Total 16 Grouped Bundles / All Spots`]
+        badges: [`Total 15 Grouped Bundles / All Spots`]
       }
     };
 
@@ -517,14 +500,12 @@
 
         setTimeout(() => map.invalidateSize(), 100);
 
-        // 지도 마커 배치
         current.stops.forEach((s, idx) => {
           const m = L.marker([s.lat, s.lng]).addTo(map).bindPopup(`<b>${idx + 1}. ${s.title}</b><br>${s.time}`);
           markers.push(m);
         });
 
         if (key === 'opt1') {
-          // 옵션 1: 기존 타임라인 표시
           secListTitle.innerText = '🕒 Timeline';
           timelineList.classList.remove('hidden');
           tourGroupContainer.classList.add('hidden');
@@ -544,7 +525,6 @@
             timelineList.appendChild(el);
           });
         } else if (key === 'opt2') {
-          // 옵션 2: TOUR 타입의 정보만 모아서 카드 형태로 표시
           secListTitle.innerText = '🚌 Recommended Tour Information';
           timelineList.classList.add('hidden');
           tourGroupContainer.classList.remove('hidden');
@@ -568,7 +548,7 @@
                   <span class="course-badge">${group.category}</span>
                   <span class="course-name">📦 ${group.groupName}</span>
                 </div>
-                ${group.sharedUrl ? `<a href="${group.sharedUrl}" target="_blank" class="course-link-btn">🔗 Official Link</a>` : ''}
+                ${group.sharedUrl ? `<a href="${group.sharedUrl}" target="_blank" rel="noreferrer" class="course-link-btn">🔗 Course Link</a>` : ''}
               </div>
               <div class="spot-items-grid">
                 ${itemsHtml}
@@ -617,7 +597,6 @@
             <span class="cat-tag">${group.category}</span>
             <div class="eng-title">${item.eng}</div>
             ${item.note ? `<div class="note-tag">📍 ${item.note}</div>` : ''}
-            ${item.url ? `<a href="${item.url}" target="_blank" class="single-link">🔗 Individual Link</a>` : ''}
           </div>
         `).join('');
 
@@ -627,7 +606,7 @@
               <span class="course-badge">${group.category}</span>
               <span class="course-name">📦 ${group.groupName}</span>
             </div>
-            ${group.sharedUrl ? `<a href="${group.sharedUrl}" target="_blank" class="course-link-btn">🔗 Official VisitKorea Details</a>` : ''}
+            ${group.sharedUrl ? `<a href="${group.sharedUrl}" target="_blank" rel="noreferrer" class="course-link-btn">🔗 Course Link</a>` : ''}
           </div>
           <div class="spot-items-grid">
             ${itemsHtml}
