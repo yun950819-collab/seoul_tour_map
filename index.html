@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -194,7 +195,7 @@
     }
 
     .pos-card-img {
-      height: 150px;
+      height: 180px;
       width: 100%;
       object-fit: cover;
       background: #e2e8f0;
@@ -479,17 +480,28 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
+    // 검증된 고화질 Unsplash CDN 이미지 매핑
     const imageMap = {
-      "Bukchon & Samcheong-dong Course": "https://images.unsplash.com/photo-1538485399081-7191377e8241?w=600&auto=format&fit=crop&q=80",
-      "Gwanghwamun & Gyeongbokgung Course": "https://images.unsplash.com/photo-1548115184-bc6544d06a58?w=600&auto=format&fit=crop&q=80",
-      "Cheonggyecheon Stream & Deoksugung Course": "https://images.unsplash.com/photo-1517154421773-0529f29ea451?w=600&auto=format&fit=crop&q=80",
-      "Tongin Market Traditional Course": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&auto=format&fit=crop&q=80",
-      "Insa-dong Culture & Ssamzigil Course": "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=600&auto=format&fit=crop&q=80",
-      "Seongsu Lifestyle & Cafe Street Course": "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&auto=format&fit=crop&q=80",
-      "Namsan & Myeong-dong Downtown Course": "https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=600&auto=format&fit=crop&q=80",
-      "National Museum of Korea Course": "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=600&auto=format&fit=crop&q=80",
-      "Jamsil Lotte World Course": "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?w=600&auto=format&fit=crop&q=80",
-      "Dongdaemun & Historic Prison Course": "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=600&auto=format&fit=crop&q=80"
+      // 북촌 한옥마을 코스
+      "Bukchon & Samcheong-dong Course": "https://images.unsplash.com/photo-1548115184-bc6544d06a58?auto=format&fit=crop&w=800&q=80",
+      // 광화문 & 경복궁 코스
+      "Gwanghwamun & Gyeongbokgung Course": "https://images.unsplash.com/photo-1722074764794-3bd97ff3047c?auto=format&fit=crop&w=800&q=80",
+      // 청계천
+      "Cheonggyecheon Stream & Deoksugung Course": "https://images.unsplash.com/photo-1687779176476-55920ac3f400?auto=format&fit=crop&w=800&q=80",
+      // 전통시장
+      "Tongin Market Traditional Course": "https://images.unsplash.com/photo-1766662538481-2f0de36fc4af?auto=format&fit=crop&w=800&q=80",
+      // 인사동 & 쌈짓길
+      "Insa-dong Culture & Ssamzigil Course": "https://images.unsplash.com/photo-1709983075478-4ec7b791329a?auto=format&fit=crop&w=800&q=80",
+      // 성수동 감성 카페
+      "Seongsu Lifestyle & Cafe Street Course": "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80",
+      // 남산 서울타워 야경
+      "Namsan & Myeong-dong Downtown Course": "https://images.unsplash.com/photo-1576826176379-d3c1b5984a1a?auto=format&fit=crop&w=800&q=80",
+      // 국립중앙박물관
+      "National Museum of Korea Course": "https://images.unsplash.com/photo-1662808655579-465374fbb5fe?auto=format&fit=crop&w=800&q=80",
+      // 잠실 롯데타워
+      "Jamsil Lotte World Course": "https://images.unsplash.com/photo-1672980487117-f719398fb8d4?auto=format&fit=crop&w=800&q=80",
+      // 동대문 / 성곽
+      "Dongdaemun & Historic Prison Course": "https://images.unsplash.com/photo-1779280138636-7c94d1c0bac1?auto=format&fit=crop&w=800&q=80"
     };
 
     const courseGroups = [
@@ -565,32 +577,30 @@
       }
     ];
 
-    // 고화질 검증된 이미지 URL로 수정된 투어 패키지 목록
     const tourPackageList = [
       {
         name: "DMZ Security Tour",
         subCategory: "Historical & Security",
         desc: "A powerful geopolitical tour visiting the Korean Demilitarized Zone, Third Tunnel, and Dora Observatory.",
-        image: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=600&auto=format&fit=crop&q=80",
+        image: "https://images.unsplash.com/photo-1710006881997-7c2ce34d68a8?auto=format&fit=crop&w=800&q=80",
         url: "https://english.visitkorea.or.kr/svc/thingsToDo/subDmzTours.do?menuSn=234"
       },
       {
         name: "Seoul City Tour Bus",
         subCategory: "City Sightseeing",
         desc: "Hop-on & hop-off sightseeing bus covering major iconic landmarks across downtown Seoul comfortably.",
-        image: "https://images.unsplash.com/photo-1517154421773-0529f29ea451?w=600&auto=format&fit=crop&q=80",
+        image: "https://images.unsplash.com/photo-1517154421773-0529f29ea451?auto=format&fit=crop&w=800&q=80",
         url: "https://www.seoulcitybus.com/en/tours"
       },
       {
         name: "K-Beauty & K-Medi Wellness Tour",
         subCategory: "Wellness & Healing",
         desc: "A restorative day-trip featuring Korean traditional tea therapy, herbal spa, and K-beauty wellness treatments.",
-        image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600&auto=format&fit=crop&q=80",
+        image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80",
         url: "https://english.visitkorea.or.kr/svc/contents/contentsView.do?menuSn=923&dataSetId=115&vcontsId=219764"
       }
     ];
 
-    // 레스토랑 목록
     const restaurantList = [
       { name: "Hwangsaungm Kongguksu", location: "📍 Euljiro / City Hall", query: "황생가콩국수" },
       { name: "Gosari express", location: "📍 Jongno / Insa-dong", query: "고사리익스프레스" },
@@ -608,6 +618,8 @@
       { name: "Monk's Butcher", location: "📍 Hannam-dong", query: "몽크스부처" },
       { name: "Eojjeoda Nongbu", location: "📍 Hoehyeon / Namdaemun", query: "어쩌다농부" }
     ];
+
+    const fallbackImage = "https://images.unsplash.com/photo-1517154421773-0529f29ea451?auto=format&fit=crop&w=800&q=80";
 
     let map, currentCategory = 'ALL';
 
@@ -665,7 +677,7 @@
       const search = document.getElementById('spotSearch').value.toLowerCase();
       container.innerHTML = '';
 
-      // 1. 일반 어트랙션 코스 카드
+      // 1. 코스 카드
       if (currentCategory === 'ALL' || currentCategory === 'In Seoul') {
         courseGroups.forEach(group => {
           const groupMatches = group.groupName.toLowerCase().includes(search);
@@ -674,7 +686,7 @@
           
           if (!groupMatches && !descMatches && matchingItems.length === 0) return;
 
-          const imgSrc = imageMap[group.groupName] || "https://images.unsplash.com/photo-1538485399081-7191377e8241?w=600&auto=format&fit=crop&q=80";
+          const imgSrc = imageMap[group.groupName] || fallbackImage;
 
           const card = document.createElement('div');
           card.className = 'pos-card';
@@ -686,7 +698,7 @@
           `).join('');
 
           card.innerHTML = `
-            <img src="${imgSrc}" class="pos-card-img" alt="${group.groupName}">
+            <img src="${imgSrc}" class="pos-card-img" alt="${group.groupName}" onerror="this.onerror=null;this.src='${fallbackImage}';">
             <div class="pos-card-body">
               <div class="pos-card-header">
                 <span class="pos-card-category">${group.category}</span>
@@ -701,7 +713,7 @@
         });
       }
 
-      // 2. 사진이 포함된 투어 패키지 그룹 카드
+      // 2. 투어 패키지 카드
       if (currentCategory === 'ALL' || currentCategory === 'Tour') {
         const filteredTours = tourPackageList.filter(t => 
           t.name.toLowerCase().includes(search) || t.subCategory.toLowerCase().includes(search) || t.desc.toLowerCase().includes(search)
@@ -713,7 +725,7 @@
 
           let tourCardsHtml = filteredTours.map(t => `
             <div class="sub-item-card">
-              <img src="${t.image}" class="sub-card-img" alt="${t.name}">
+              <img src="${t.image}" class="sub-card-img" alt="${t.name}" onerror="this.onerror=null;this.src='${fallbackImage}';">
               <div class="sub-item-card-body">
                 <div>
                   <span class="pos-card-category tour-tag">${t.subCategory}</span>
@@ -740,7 +752,7 @@
         }
       }
 
-      // 3. 레스토랑 단일 그룹 카드
+      // 3. 레스토랑 카드
       if (currentCategory === 'ALL' || currentCategory === 'Restaurant') {
         const filteredRestaurants = restaurantList.filter(r => 
           r.name.toLowerCase().includes(search) || r.location.toLowerCase().includes(search)
@@ -787,7 +799,7 @@
 
       let tourCardsHtml = tourPackageList.map(t => `
         <div class="sub-item-card">
-          <img src="${t.image}" class="sub-card-img" alt="${t.name}">
+          <img src="${t.image}" class="sub-card-img" alt="${t.name}" onerror="this.onerror=null;this.src='${fallbackImage}';">
           <div class="sub-item-card-body">
             <div>
               <span class="pos-card-category tour-tag">${t.subCategory}</span>
